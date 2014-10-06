@@ -6,6 +6,7 @@ from pygame.locals import *
 from gamelib.util import *
 from gamelib.gfxlib import *
 from gamelib.gfxgame import *
+from gamelib.CarpetGame import *
 
 # Globals.
 ScreenSize = [800,600]
@@ -74,6 +75,11 @@ def main():
             pygame.display.flip()
         
         elif GameState == 3: # Game on!
+            
+            surface.fill(pygame.Color("black"))
+            pygame.display.flip()
+            
+            Game = CarpetGame( surface, screen, (800,600) ) 
             
             while GameState == 3:
                 print("Game on")

@@ -26,7 +26,7 @@ if __name__=="__main__":
             x += w
             pygame.draw.rect(screen, c, Rect(x, y, w, w ), 0)
     
-    #DrawGradient(screen, Color(0, 0, 255), Rect(0,0,640,480), 20)
+    DrawGradient(screen, Color(0, 0, 255), Rect(0,0,640,480), 20)
     drawMatchstickPerson(screen, (100, 200), Color(0,255,0))
     cb = copperBar()
     cb.draw(screen)
