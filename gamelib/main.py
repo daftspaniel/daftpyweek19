@@ -31,19 +31,27 @@ Game = None
 # MAIN
 #------
 def main():
-    pygame.mixer.music.load("snd/menu.mp3")
-    pygame.mixer.music.play(-1)
+    #pygame.mixer.music.load("snd/menu.mp3")
+    #pygame.mixer.music.play(-1)
     
     GameState = 1
     DrawText(surface, 10, 50, "Daftspaniel Presents...", 48, (255,255,255) )
     screen.blit(surface, (0, 0))
     pygame.display.flip()
-    pygame.time.wait(3000)
+    
+    for k in range(9):
+        DrawGradient(surface, Color(125, 0, 111 + k*3), Rect(0,0,800,600))
+        DrawText(surface, 210, 250, GameName[:k], 78, (255,0,0) )
+        DrawText(surface, 211, 251, GameName[:k], 78, (255,156,0) )
+        DrawText(surface, 212, 252, GameName[:k], 78, (245,245,245) )
+        pygame.time.wait(300)
+        screen.blit(surface, (0, 0))
+        pygame.display.flip()
+    
     cb = copperBar()
     cbr = copperBar( (1,0,0), 50 )
     backcol = 255
     dudex = 0
-
     
     while GameState!=-1:
 
