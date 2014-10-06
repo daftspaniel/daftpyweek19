@@ -15,6 +15,9 @@ Debug = False
 GameName = "ONE ROOM"
 
 # Standard Init.
+
+#pygame.mixer.init()
+pygame.mixer.pre_init(44100,-16,2,2048)
 pygame.init()
 screen = pygame.display.set_mode(ScreenSize)
 pygame.display.set_caption(GameName)
@@ -28,15 +31,19 @@ Game = None
 # MAIN
 #------
 def main():
+    pygame.mixer.music.load("snd/menu.mp3")
+    pygame.mixer.music.play(-1)
     
     GameState = 1
     DrawText(surface, 10, 50, "Daftspaniel Presents...", 48, (255,255,255) )
     screen.blit(surface, (0, 0))
     pygame.display.flip()
+    pygame.time.wait(3000)
     cb = copperBar()
     cbr = copperBar( (1,0,0), 50 )
     backcol = 255
     dudex = 0
+
     
     while GameState!=-1:
 
@@ -57,8 +64,8 @@ def main():
                     DrawGradient(surface, Color(125, 0, backcol), Rect(0,0,800,600))
                     drawMatchstickPerson(surface, (dudex, 280 + dudey), Color(RND(255),255,0))
                     
-                    cb.draw(surface)
-                    cbr.draw(surface)
+                    cb.Draw(surface)
+                    cbr.Draw(surface)
                     surface.unlock()
                     DrawText(surface, 210, 250, GameName, 78, (255,0,0) )
                     DrawText(surface, 211, 251, GameName, 78, (255,156,0) )
@@ -68,6 +75,7 @@ def main():
                     keystate = pygame.key.get_pressed()
                     if keystate[K_SPACE]:
                         GameState = 3
+                        pygame.mixer.music.stop()
                     if keystate[K_ESCAPE]==1:
                         GameState = -1
 

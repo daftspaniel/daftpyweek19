@@ -27,7 +27,7 @@ class copperBar(object):
             bcm.append( (int(c[0] * rgb[0]), int(c[1] * rgb[1]), int(c[2] * rgb[2])) )
         self.barcolor = bcm
         
-    def draw(self, srf):
+    def Draw(self, srf):
         #
         self.y += 2*self.direct
         if self.y>568 or self.y<32:

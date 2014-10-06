@@ -29,7 +29,7 @@ if __name__=="__main__":
     DrawGradient(screen, Color(0, 0, 255), Rect(0,0,640,480), 20)
     drawMatchstickPerson(screen, (100, 200), Color(0,255,0))
     cb = copperBar()
-    cb.draw(screen)
+    cb.Draw(screen)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
