@@ -10,14 +10,16 @@ from gamelib.gfxgame import *
 
 class CarpetGame(object):
     
-    def __init__(self, Surface, Screen, ScreenSize):
+    def __init__(self, Surface, Screen, ScreenSize, Ajoystick):
         self.Screen = Screen
         self.Surface = Surface
         self.ScreenSize = ScreenSize
+        self.Gamepad = Ajoystick
         self.StatusBar = copperBar( (0,1,0), 540 )
         self.StatusBar.direct = 0
         self.sounda= pygame.mixer.Sound("snd/laytile.wav")
         self.soundb= pygame.mixer.Sound("snd/tileup.wav")
+        self.tilesout = pygame.mixer.Sound("snd/outoftiles.wav")
         
     def MainLoop(self):
         
@@ -44,7 +46,21 @@ class CarpetGame(object):
                 elif event.type == ANIMEVENT:
                     self.DrawRoom()
                     self.CheckTiles()
+            
+                    #Gamepad
+                    h_axis = self.Gamepad.get_axis(0)
+                    v_axis = self.Gamepad.get_axis(1)
+                    a_button = self.Gamepad.get_button(0)
                     
+                    if h_axis<0:
+                        self.p1.Move(0,-2)
+                    elif h_axis>0:
+                        self.p1.Move(0,2)
+                    if v_axis<0:
+                        self.p1.Move(-2,0)
+                    elif v_axis>0:
+                        self.p1.Move(2,0)
+            
     def CreateRoom(self, level):
         self.TheRoom = Room( (0,255,0) )
         
@@ -63,6 +79,7 @@ class CarpetGame(object):
         
     def CheckTiles(self):
         
+        # Restock Carpet Tiles
         if self.TheRoom.RocketRect.colliderect(self.p1.Hotspot):
             self.p1.Tiles = 30
             if not self.InRocket:
@@ -71,6 +88,11 @@ class CarpetGame(object):
         else:
             self.InRocket = False
             
+        # Beasties
+        for b in self.Beasties:
+            if b.Hotspot.colliderect(self.p1.Hotspot):
+                self.p1.Health -= b.Damage
+        # Tiles
         if self.p1.Tiles==0: return
             
         for t in self.TheTiles:
@@ -79,6 +101,8 @@ class CarpetGame(object):
                 self.sounda.play()
                 self.TilesDone+=1
                 self.p1.Tiles -= 1
+                if self.p1.Tiles==0:
+                    self.tilesout.play()
 
     def DrawRoom(self):
         self.Surface.fill(pygame.Color("black"))

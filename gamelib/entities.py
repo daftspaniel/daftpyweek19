@@ -39,6 +39,7 @@ class Room(object):
         pygame.draw.line(srf, self.col, (0, HORIZON) , (800,HORIZON), 1)
         self.RocketRect = drawRocket(srf, (20,300), None)
         pygame.draw.polygon(srf, Color(140, 0, 255), [(134, HORIZON), (215, HORIZON-45), (530, HORIZON)])
+        pygame.draw.polygon(srf, Color(155, 255, 214), [(634, HORIZON), (666, HORIZON-99), (696, HORIZON)])
 #TILE_WIDTH = 20
 
 class Tile(object):
@@ -65,6 +66,8 @@ class Beastie(object):
         self.xdir = -1
         self.ydir = -1
         self.Hotspot = Rect(x, y, 30, 20 )
+        self.Damage = 5
+        
     def Draw(self, srf):
         pygame.draw.rect(srf, (144,238,144) , self.Hotspot)
         if self.x<66 or self.x>580: self.xdir*=-1

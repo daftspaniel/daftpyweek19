@@ -19,6 +19,15 @@ GameName = "ONE ROOM"
 #pygame.mixer.init()
 pygame.mixer.pre_init(44100,-16,2,2048)
 pygame.init()
+joystick_count = pygame.joystick.get_count()
+
+if joystick_count == 0:
+    print ("No joysticks")
+    ajoystick = None
+else:
+    ajoystick = pygame.joystick.Joystick(0)
+    ajoystick.init()
+
 screen = pygame.display.set_mode(ScreenSize)
 pygame.display.set_caption(GameName)
 
@@ -95,7 +104,7 @@ def main():
             surface.fill(pygame.Color("black"))
             pygame.display.flip()
             
-            Game = CarpetGame( surface, screen, (800,600) ) 
+            Game = CarpetGame( surface, screen, (800,600), ajoystick ) 
             
             while GameState == 3:
                 print("Game on")
