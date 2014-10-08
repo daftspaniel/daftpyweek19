@@ -20,6 +20,7 @@ class CarpetGame(object):
         self.sounda= pygame.mixer.Sound("snd/laytile.wav")
         self.soundb= pygame.mixer.Sound("snd/tileup.wav")
         self.tilesout = pygame.mixer.Sound("snd/outoftiles.wav")
+        self.hurt_sfx = pygame.mixer.Sound("snd/hurt.wav")
         
     def MainLoop(self):
         
@@ -77,6 +78,9 @@ class CarpetGame(object):
         self.Beasties.append(Beastie(400 + RND(100), 390))
         self.Beasties.append(Beastie(500 + RND(100), 430))
         
+        self.Beasties.append(Laser(700, 500))
+        
+        
     def CheckTiles(self):
         
         # Restock Carpet Tiles
@@ -89,9 +93,13 @@ class CarpetGame(object):
             self.InRocket = False
             
         # Beasties
+        self.p1.Hurting = False
         for b in self.Beasties:
             if b.Hotspot.colliderect(self.p1.Hotspot):
                 self.p1.Health -= b.Damage
+                self.hurt_sfx.play()
+                self.p1.Hurting = True
+                
         # Tiles
         if self.p1.Tiles==0: return
             
@@ -128,6 +136,8 @@ class CarpetGame(object):
             pygame.draw.rect(self.Surface, (255,255,255), (395,567,75,20))
             DrawText(self.Surface, 399, 570, "RELOAD", 24, (240,0,0) )
         DrawText(self.Surface, 520, 570, "Score : " + str(self.p1.Score), 24, (240,240,240) )
+        if self.p1.Hurting:
+            pygame.draw.rect(self.Surface, (255,0,0), (610,560,125,40))
         DrawText(self.Surface, 620, 570, "Health : " + str(self.p1.Health), 24, (240,240,240) )
         
         #Flip
