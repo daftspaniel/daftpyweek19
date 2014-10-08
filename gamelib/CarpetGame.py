@@ -47,7 +47,7 @@ class CarpetGame(object):
                 elif event.type == ANIMEVENT:
                     self.DrawRoom()
                     self.CheckTiles()
-            
+                    self.LowerLaser.Move()
                     #Gamepad
                     h_axis = self.Gamepad.get_axis(0)
                     v_axis = self.Gamepad.get_axis(1)
@@ -77,9 +77,8 @@ class CarpetGame(object):
         self.Beasties.append(Beastie(300 + RND(100), 310))
         self.Beasties.append(Beastie(400 + RND(100), 390))
         self.Beasties.append(Beastie(500 + RND(100), 430))
-        
-        self.Beasties.append(Laser(700, 500))
-        
+        self.LowerLaser = Laser(700, 500)
+        self.Beasties.append(self.LowerLaser)
         
     def CheckTiles(self):
         

@@ -3,7 +3,7 @@ import pygame
 from pygame.locals import *
 from gamelib.gfxlib import *
 from gamelib.gfxgame import *
-
+from gamelib.util import *
 TILE_WIDTH = 20
 HORIZON = 180
 
@@ -30,7 +30,7 @@ class Player(object):
             self.Moving = True
         self.Hotspot = Rect(self.rect.x, self.rect.y + 20, 10, 5 )
         self.Anim += 1
-        if self.Anim>3:self.Anim=0
+        if self.Anim>4:self.Anim=0
                 
     def Draw(self, srf):
         #pygame.draw.rect(srf, (155,155,0), self.Hotspot)
@@ -52,6 +52,7 @@ class Room(object):
         DrawGradient(srf, self.col, Rect(0,0,800,180), 8)
         pygame.draw.line(srf, self.col, (0, HORIZON) , (800,HORIZON), 1)
         self.RocketRect = drawRocket(srf, (20,300), None)
+        pygame.draw.polygon(srf, Color(14, 0, 255), [(13, HORIZON), (115, HORIZON-25), (230, HORIZON)])
         pygame.draw.polygon(srf, Color(140, 0, 255), [(134, HORIZON), (215, HORIZON-45), (530, HORIZON)])
         pygame.draw.polygon(srf, Color(155, 255, 214), [(534, HORIZON), (555, HORIZON-165), (610, HORIZON)])
         pygame.draw.polygon(srf, Color(225, 209, 212), [(634, HORIZON), (666, HORIZON-99), (696, HORIZON)])
@@ -81,7 +82,7 @@ class Beastie(object):
         self.xdir = -1
         self.ydir = -1
         self.Hotspot = Rect(x, y, 30, 20 )
-        self.Damage = 5
+        self.Damage = 3
         
     def Draw(self, srf):
         self.c_body = (144,238,144) 
@@ -104,20 +105,36 @@ class Laser(object):
         self.y = y
         self.xdir = -1
         self.ydir = -1
-        self.Hotspot = Rect(x, y, 30, 30 )
-        self.Damage = 5
         
+        self.width = 20
+        self.Hotspot = Rect(x, y, self.width, self.width)
+        self.Damage = 8
+        
+        self.Firing = False
+        self.Firing = True
+        self.Duration = 255
+    
+    def Move(self):
+        if self.x<166 or self.x>710: self.xdir*=-1
+        self.x += -1 * self.xdir
+    
     def Draw(self, srf):
-        self.c_body = (11,238,11) 
-        pygame.draw.rect(srf, self.c_body , self.Hotspot)
-        #pygame.draw.rect(srf, (255,255,0) , Rect(self.x, self.y, 10, 10 ))
-        #pygame.draw.rect(srf, (255,255,0) , Rect(self.x + 12, self.y, 10, 10 ))
-        #pygame.draw.rect(srf, (0,0,0) , (self.x + 3, self.y + 3, 2 ,2))
-        #pygame.draw.rect(srf, (0,0,0) , (self.x + 12 + 3, self.y + 3, 2 ,2) )
         
-        #if self.x<66 or self.x>580: self.xdir*=-1
-        #if self.y<300 or self.y>500: self.ydir*=-1
-        #self.x += -1 * self.xdir
-        #self.y += -1 * self.ydir
-        self.Hotspot = Rect(self.x, self.y, 30, 30 )
+        self.c_body = (11,238,11) 
+        
+        self.TowerHotspot = Rect(self.x, self.y, self.width, self.width )
+        
+        self.Hotspot = Rect(self.x, self.y, self.width, self.width )
+        
+        pygame.draw.rect(srf, self.c_body , self.Hotspot)
+        
+        
+        
         pygame.draw.rect(srf, self.c_body , self.Hotspot, 1)
+        
+        if self.Firing:
+            self.c_laser = (RND(255),RND(255),RND(255))
+            pygame.draw.rect(srf, self.c_laser , (self.Hotspot.left, HORIZON-30, self.width, (self.width + self.Hotspot.top)-HORIZON) )
+            self.Duration -= 1
+            if self.Duration==0:
+                self.Firing = False
