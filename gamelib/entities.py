@@ -111,13 +111,17 @@ class Laser(object):
         self.Damage = 8
         
         self.Firing = False
-        self.Firing = True
-        self.Duration = 255
-    
+        self.Activation = 5
+        self.WarningLight = False        
+        self.Duration = 55
+        self.WarningDuration = 55
+        
     def Move(self):
+        if self.WarningLight: return
         if self.x<166 or self.x>710: self.xdir*=-1
         self.x += -1 * self.xdir
-    
+        if RND(100)<self.Activation: self.WarningLight = True
+        
     def Draw(self, srf):
         
         self.c_body = (11,238,11) 
@@ -126,15 +130,28 @@ class Laser(object):
         
         self.Hotspot = Rect(self.x, self.y, self.width, self.width )
         
-        pygame.draw.rect(srf, self.c_body , self.Hotspot)
+        #pygame.draw.rect(srf, self.c_body , self.Hotspot)
         
+        pygame.draw.rect(srf, (255,255,255) , (self.x, self.y+13, self.width, 5) )
+        pygame.draw.rect(srf, (55,255,255) , (self.x + 6, self.y, 8, self.width) )
+        pygame.draw.rect(srf, (255,255,255) , (self.x+3, self.y+5, 14, 4) )
         
+        #pygame.draw.rect(srf, (0,0,255) , self.Hotspot, 1)
         
-        pygame.draw.rect(srf, self.c_body , self.Hotspot, 1)
-        
+        if self.WarningLight:
+            self.WarningDuration -= 1
+            if self.WarningDuration==0:
+                self.Firing = True
+                self.WarningLight = False
+            else:
+                pygame.draw.rect(srf,(255,0,0), (self.x, self.y+13, self.width, 4) )
         if self.Firing:
             self.c_laser = (RND(255),RND(255),RND(255))
             pygame.draw.rect(srf, self.c_laser , (self.Hotspot.left, HORIZON-30, self.width, (self.width + self.Hotspot.top)-HORIZON) )
             self.Duration -= 1
             if self.Duration==0:
+                self.Duration = 255
+                self.WarningDuration = 55
                 self.Firing = False
+                self.Inactive = True
+                self.WarningLight = False

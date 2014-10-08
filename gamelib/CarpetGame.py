@@ -21,6 +21,7 @@ class CarpetGame(object):
         self.soundb= pygame.mixer.Sound("snd/tileup.wav")
         self.tilesout = pygame.mixer.Sound("snd/outoftiles.wav")
         self.hurt_sfx = pygame.mixer.Sound("snd/hurt.wav")
+        self.laser_sfx = pygame.mixer.Sound("snd/laser.wav")
         
     def MainLoop(self):
         
@@ -29,7 +30,7 @@ class CarpetGame(object):
         self.DrawRoom()
         pygame.key.set_repeat(1, 10)
         
-        while True:
+        while self.p1.Health>0:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     keystate = pygame.key.get_pressed()
@@ -98,7 +99,10 @@ class CarpetGame(object):
                 self.p1.Health -= b.Damage
                 self.hurt_sfx.play()
                 self.p1.Hurting = True
-                
+        
+        if self.LowerLaser.Firing and not pygame.mixer.get_busy():
+            self.laser_sfx.play()
+        
         # Tiles
         if self.p1.Tiles==0: return
             
