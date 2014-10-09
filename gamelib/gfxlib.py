@@ -30,7 +30,7 @@ class copperBar(object):
     def Draw(self, srf):
         #
         self.y += 2*self.direct
-        if self.y>568 or self.y<32:
+        if self.y>751 or self.y<-150:
             self.direct *= -1
         for i in range(0, self.barheight):
             pygame.draw.line(srf, self.barcolor[i], (0, self.y+i), (799, self.y+i))

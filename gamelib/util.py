@@ -3,6 +3,7 @@ import pygame
 from pygame.locals import *
 
 ANIMEVENT = pygame.USEREVENT+1
+LOGICEVENT = pygame.USEREVENT+2
 
 def CreateBackground(screen):
     bg = pygame.Surface(screen.get_size())

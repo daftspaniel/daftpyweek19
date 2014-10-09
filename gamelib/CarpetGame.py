@@ -6,88 +6,104 @@ from gamelib.entities import *
 from gamelib.util import *
 from gamelib.gfxlib import *
 from gamelib.gfxgame import *
-
+from gamelib.levelmaker import *
 
 class CarpetGame(object):
     
-    def __init__(self, Surface, Screen, ScreenSize, Ajoystick):
+    def __init__(self, Surface, Screen, ScreenSize, Ajoystick, sndmanager):
         self.Screen = Screen
         self.Surface = Surface
         self.ScreenSize = ScreenSize
         self.Gamepad = Ajoystick
         self.StatusBar = copperBar( (0,1,0), 540 )
         self.StatusBar.direct = 0
-        self.sounda= pygame.mixer.Sound("snd/laytile.wav")
-        self.soundb= pygame.mixer.Sound("snd/tileup.wav")
-        self.tilesout = pygame.mixer.Sound("snd/outoftiles.wav")
-        self.hurt_sfx = pygame.mixer.Sound("snd/hurt.wav")
-        self.laser_sfx = pygame.mixer.Sound("snd/laser.wav")
+        self.SND = sndmanager
+        self.LM = LevelMaker()
+        self.StartPos = (110,300)
+        self.Pause = False
         
     def MainLoop(self):
         
-        self.p1 = Player( (210,300) )
-        self.CreateRoom(1)
+        self.p1 = Player( self.StartPos )
+        self.p1.Level = 55
+        self.CreateRoom(self.p1.Level)
         self.DrawRoom()
         pygame.key.set_repeat(1, 10)
         
         while self.p1.Health>0:
+            
             for event in pygame.event.get():
+                
                 if event.type == pygame.KEYDOWN:
                     keystate = pygame.key.get_pressed()
                     if keystate[K_ESCAPE]==1:
                         return
-                    if keystate[K_w]==1:
-                        self.p1.Move(-1,0)
-                    elif keystate[K_s]==1:
-                        self.p1.Move(1,0)
-                    if keystate[K_a]==1:
-                        self.p1.Move(0,-1)
-                    elif keystate[K_d]==1:
-                        self.p1.Move(0,1)
                     
+                    if self.Pause:
+                        if keystate[K_o]==1:
+                            self.Pause = False
+                    else:
+                        if keystate[K_w]==1:
+                            self.p1.Move(-1,0)
+                        elif keystate[K_s]==1:
+                            self.p1.Move(1,0)
+                        if keystate[K_a]==1:
+                            self.p1.Move(0,-1)
+                        elif keystate[K_d]==1:
+                            self.p1.Move(0,1)
+                        elif keystate[K_p]==1:
+                            self.Pause = True
+                            print("Pause")
+
                 elif event.type == ANIMEVENT:
-                    self.DrawRoom()
-                    self.CheckTiles()
-                    self.LowerLaser.Move()
-                    #Gamepad
-                    h_axis = self.Gamepad.get_axis(0)
-                    v_axis = self.Gamepad.get_axis(1)
-                    a_button = self.Gamepad.get_button(0)
                     
-                    if h_axis<0:
-                        self.p1.Move(0,-2)
-                    elif h_axis>0:
-                        self.p1.Move(0,2)
-                    if v_axis<0:
-                        self.p1.Move(-2,0)
-                    elif v_axis>0:
-                        self.p1.Move(2,0)
+                    self.DrawRoom()
+                    
+                elif event.type == LOGICEVENT:
+                    
+                    if not self.Pause:
+                        self.CheckTiles()
+                        for l in self.Lasers:
+                            l.Move()
+                        
+                        #Gamepad
+                        h_axis = self.Gamepad.get_axis(0)
+                        v_axis = self.Gamepad.get_axis(1)
+                        a_button = self.Gamepad.get_button(0)
+                        
+                        if h_axis<0:
+                            self.p1.Move(0,-2)
+                        elif h_axis>0:
+                            self.p1.Move(0,2)
+                        if v_axis<0:
+                            self.p1.Move(-2,0)
+                        elif v_axis>0:
+                            self.p1.Move(2,0)
             
     def CreateRoom(self, level):
         self.TheRoom = Room( (0,255,0) )
         
         self.TheTiles = []
         self.Beasties = []
-        
+        self.Lasers = []
         self.TilesDone = 0
-        for j in range(10):
-            for i in range(10):
-                t = Tile( 320 + TILE_WIDTH*i, 240 + TILE_WIDTH*j, (55,0,0), (170+(i*3 + j*4),20+(i*8+j*8),0))
-                self.TheTiles.append(t)
+        self.p1.Pos(self.StartPos)
+        self.p1.Tiles = 30
         
-        self.Beasties.append(Beastie(300 + RND(100), 310))
-        self.Beasties.append(Beastie(400 + RND(100), 390))
-        self.Beasties.append(Beastie(500 + RND(100), 430))
-        self.LowerLaser = Laser(700, 500)
-        self.Beasties.append(self.LowerLaser)
+        self.LM.CreateRoom( level, self.TheTiles, self.Beasties, self.Lasers )
         
     def CheckTiles(self):
+        
+        if self.TilesDone == len(self.TheTiles) and len(self.TheTiles)>0:
+            self.SND.Play("Done")
+            self.p1.Level += 1
+            self.CreateRoom(self.p1.Level)
         
         # Restock Carpet Tiles
         if self.TheRoom.RocketRect.colliderect(self.p1.Hotspot):
             self.p1.Tiles = 30
             if not self.InRocket:
-                self.soundb.play()
+                self.SND.Play("Reload")
             self.InRocket = True
         else:
             self.InRocket = False
@@ -97,11 +113,12 @@ class CarpetGame(object):
         for b in self.Beasties:
             if b.Hotspot.colliderect(self.p1.Hotspot):
                 self.p1.Health -= b.Damage
-                self.hurt_sfx.play()
+                self.SND.Play("Hurt")
                 self.p1.Hurting = True
         
-        if self.LowerLaser.Firing and not pygame.mixer.get_busy():
-            self.laser_sfx.play()
+        for l in self.Lasers:
+            if l.Firing:
+                self.SND.Play("Laser")
         
         # Tiles
         if self.p1.Tiles==0: return
@@ -109,11 +126,11 @@ class CarpetGame(object):
         for t in self.TheTiles:
             if t.carpet == False and t.Hotspot.colliderect(self.p1.Hotspot):
                 t.carpet = True
-                self.sounda.play()
+                self.SND.Play("LayTile")
                 self.TilesDone+=1
                 self.p1.Tiles -= 1
                 if self.p1.Tiles==0:
-                    self.tilesout.play()
+                    self.SND.Play("TilesOut")
 
     def DrawRoom(self):
         self.Surface.fill(pygame.Color("black"))
@@ -126,6 +143,8 @@ class CarpetGame(object):
             t.Draw(self.Surface)
         for b in self.Beasties:
             b.Draw(self.Surface)
+        for l in self.Lasers:
+            l.Draw(self.Surface)
         self.StatusBar.Draw(self.Surface)
         
         self.p1.Draw(self.Surface)

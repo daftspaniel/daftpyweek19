@@ -12,14 +12,15 @@ class Player(object):
         self.Level = 1
         self.Score = 0
         self.Health = 100
-        self.rect = Rect(pos[0], pos[1], 10, 25 )
-        self.Hotspot = Rect(pos[0], pos[1] + 20, 10, 5 )
+        self.Pos(pos)
         self.Tiles = 30
         self.InRocket = False
         self.Hurting = False
         self.Moving = False
         self.Anim = 0
-    
+    def Pos(self, apos):
+        self.rect = Rect(apos[0], apos[1], 10, 25 )
+        self.Hotspot = Rect(apos[0], apos[1] + 20, 10, 5 )
     def Move(self, vert, hori):
         self.Moving = False
         if hori!=0:
@@ -28,6 +29,11 @@ class Player(object):
         if vert!=0:
             self.rect.y += vert
             self.Moving = True
+        if self.rect.x<0: self.rect.x = 0
+        if self.rect.x>790: self.rect.x = 790
+        if self.rect.y<HORIZON: self.rect.y = HORIZON
+        if self.rect.y>520: self.rect.y = 520
+        
         self.Hotspot = Rect(self.rect.x, self.rect.y + 20, 10, 5 )
         self.Anim += 1
         if self.Anim>4:self.Anim=0
@@ -48,13 +54,14 @@ class Room(object):
         self.tiles = []
         self.col = Color(0, 0, 255)
         self.RocketRect = Rect(0,0,10,10)
+        
     def Draw(self, srf):
         DrawGradient(srf, self.col, Rect(0,0,800,180), 8)
-        pygame.draw.line(srf, self.col, (0, HORIZON) , (800,HORIZON), 1)
+        #pygame.draw.line(srf, self.col, (0, HORIZON) , (800,HORIZON), 1)
         self.RocketRect = drawRocket(srf, (20,300), None)
-        pygame.draw.polygon(srf, Color(14, 0, 255), [(13, HORIZON), (115, HORIZON-25), (230, HORIZON)])
-        pygame.draw.polygon(srf, Color(140, 0, 255), [(134, HORIZON), (215, HORIZON-45), (530, HORIZON)])
-        pygame.draw.polygon(srf, Color(155, 255, 214), [(534, HORIZON), (555, HORIZON-165), (610, HORIZON)])
+        pygame.draw.polygon(srf, Color(213, 135, 213), [(13, HORIZON), (115, HORIZON-25), (230, HORIZON)])
+        pygame.draw.polygon(srf, Color(140, 0, 255), [(134, HORIZON), (215, HORIZON-45), (630, HORIZON)])
+        pygame.draw.polygon(srf, Color(155, 255, 214), [(534, HORIZON), (565, HORIZON-165), (610, HORIZON)])
         pygame.draw.polygon(srf, Color(225, 209, 212), [(634, HORIZON), (666, HORIZON-99), (696, HORIZON)])
 #TILE_WIDTH = 20
 
@@ -92,8 +99,8 @@ class Beastie(object):
         pygame.draw.rect(srf, (0,0,0) , (self.x + 3, self.y + 3, 2 ,2))
         pygame.draw.rect(srf, (0,0,0) , (self.x + 12 + 3, self.y + 3, 2 ,2) )
         
-        if self.x<66 or self.x>580: self.xdir*=-1
-        if self.y<300 or self.y>500: self.ydir*=-1
+        if self.x<166 or self.x>580 or RND(200)==100: self.xdir*=-1
+        if self.y<300 or self.y>500 or RND(200)==100: self.ydir*=-1
         self.x += -1 * self.xdir
         self.y += -1 * self.ydir
         self.Hotspot = Rect(self.x, self.y, 30, 20 )
@@ -111,7 +118,7 @@ class Laser(object):
         self.Damage = 8
         
         self.Firing = False
-        self.Activation = 5
+        self.Activation = 2
         self.WarningLight = False        
         self.Duration = 55
         self.WarningDuration = 55

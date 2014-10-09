@@ -7,6 +7,7 @@ from gamelib.util import *
 from gamelib.gfxlib import *
 from gamelib.gfxgame import *
 from gamelib.CarpetGame import *
+from gamelib.sndman import *
 
 # Globals.
 ScreenSize = [800,600]
@@ -20,6 +21,7 @@ GameName = "ONE ROOM"
 pygame.mixer.pre_init(44100,-16,2,2048)
 pygame.init()
 joystick_count = pygame.joystick.get_count()
+soundman = sndman()
 
 if joystick_count == 0:
     print ("No joysticks")
@@ -32,6 +34,7 @@ screen = pygame.display.set_mode(ScreenSize)
 pygame.display.set_caption(GameName)
 
 pygame.time.set_timer(ANIMEVENT, 30)
+pygame.time.set_timer(LOGICEVENT, 30)
 
 surface = CreateBackground(screen)
 Game = None
@@ -53,12 +56,16 @@ def main():
         DrawText(surface, 210, 250, GameName[:k], 78, (255,0,0) )
         DrawText(surface, 211, 251, GameName[:k], 78, (255,156,0) )
         DrawText(surface, 212, 252, GameName[:k], 78, (245,245,245) )
+        if k!=4:soundman.Play("LayTile")
         pygame.time.wait(300)
         screen.blit(surface, (0, 0))
         pygame.display.flip()
     
-    cb = copperBar()
-    cbr = copperBar( (1,0,0), 50 )
+    cb = copperBar((0,0,1), 750)
+    cb.dir = -1
+    cbr = copperBar( (1,0,0), -150 )
+    cb.dir = 1
+    
     backcol = 255
     dudex = 0
     
@@ -70,8 +77,13 @@ def main():
                 if event.type == pygame.QUIT:
                     sys.exit()
                     
+                elif event.type == LOGICEVENT:
+                    if ajoystick!=None and ajoystick.get_button(0)>0:
+                        GameState = 3
+                        pygame.mixer.music.stop()
+                    
                 elif event.type == ANIMEVENT:
-                    #surface.fill(pygame.Color("black"))
+                    
                     surface.lock()
                     backcol += 1
                     dudex += 1
@@ -84,6 +96,7 @@ def main():
                     cb.Draw(surface)
                     cbr.Draw(surface)
                     surface.unlock()
+                    
                     DrawText(surface, 210, 250, GameName, 78, (255,0,0) )
                     DrawText(surface, 211, 251, GameName, 78, (255,156,0) )
                     DrawText(surface, 212, 252, GameName, 78, (255,255,255) )
@@ -104,7 +117,7 @@ def main():
             surface.fill(pygame.Color("black"))
             pygame.display.flip()
             
-            Game = CarpetGame( surface, screen, (800,600), ajoystick ) 
+            Game = CarpetGame( surface, screen, (800,600), ajoystick, soundman ) 
             
             while GameState == 3:
                 print("Game on")
