@@ -25,7 +25,7 @@ class CarpetGame(object):
     def MainLoop(self):
         
         self.p1 = Player( self.StartPos )
-        self.p1.Level = 10
+        self.p1.Level = 1
         self.CreateRoom(self.p1.Level)
         self.DrawRoom()
         pygame.key.set_repeat(1, 10)
@@ -79,6 +79,10 @@ class CarpetGame(object):
                             self.p1.Move(-2,0)
                         elif v_axis>0:
                             self.p1.Move(2,0)
+                        
+                        #Beaties
+                        for b in self.Beasties:
+                            b.Move()
         pygame.time.wait(1500)
         
     def CreateRoom(self, level):

@@ -61,7 +61,7 @@ class Room(object):
         self.RocketRect = drawRocket(srf, (20,300), None)
         pygame.draw.polygon(srf, Color(213, 135, 213), [(13, HORIZON), (115, HORIZON-25), (230, HORIZON)])
         pygame.draw.polygon(srf, Color(140, 0, 255), [(134, HORIZON), (215, HORIZON-45), (630, HORIZON)])
-        pygame.draw.polygon(srf, Color(155, 255, 214), [(534, HORIZON), (565, HORIZON-165), (610, HORIZON)])
+        pygame.draw.polygon(srf, Color(155, 255, 214), [(534, HORIZON), (565, HORIZON-165), (640, HORIZON)])
         pygame.draw.polygon(srf, Color(225, 209, 212), [(634, HORIZON), (666, HORIZON-99), (696, HORIZON)])
 #TILE_WIDTH = 20
 
@@ -98,14 +98,15 @@ class Beastie(object):
         pygame.draw.rect(srf, (255,255,0) , Rect(self.x + 12, self.y, 10, 10 ))
         pygame.draw.rect(srf, (0,0,0) , (self.x + 3, self.y + 3, 2 ,2))
         pygame.draw.rect(srf, (0,0,0) , (self.x + 12 + 3, self.y + 3, 2 ,2) )
+        pygame.draw.rect(srf, (255,255,255) , self.Hotspot, 1)
         
-        if self.x<166 or self.x>580 or RND(200)==100: self.xdir*=-1
-        if self.y<300 or self.y>500 or RND(200)==100: self.ydir*=-1
+    def Move(self):
+        if self.x<166 or self.x>580 or RND(180)==100: self.xdir*=-1
+        if self.y<210 or self.y>500 or RND(180)==100: self.ydir*=-1
         self.x += -1 * self.xdir
         self.y += -1 * self.ydir
         self.Hotspot = Rect(self.x, self.y, 30, 20 )
-        pygame.draw.rect(srf, (255,255,255) , self.Hotspot, 1)
-
+        
 class Laser(object):
     def __init__(self, x, y):
         self.x = x
