@@ -32,9 +32,8 @@ class LevelMaker(object):
                     t = Tile( 220 + TILE_WIDTH*i, 340 + TILE_WIDTH*j, (55,0,0), (170+(i*3 + j*4),20+(i*5+j*5),120))
                     Tiles.append(t)
             
-            Beasties.append(Beastie(300 + RND(100), 310))
-            Beasties.append(Beastie(300 + RND(100), 210))
-        
+            self.addBeasties(Beasties, 3)
+            
         elif level == 2 or level == 6:
             
             for j in range(10):
@@ -44,9 +43,12 @@ class LevelMaker(object):
                         Tiles.append(t)
             
             self.addBeasties(Beasties, 3)
+            self.addOrbs(Beasties, 2)
+            
             if level == 6:
                 self.addLasers(Lasers, 1)
-                
+                self.addOrbs(Beasties, 1)
+            
         elif level == 3:
             self.drawRect(Tiles, 200, 300, 5, 5 )
             self.drawRect(Tiles, 350, 350, 5, 5 )
@@ -55,12 +57,14 @@ class LevelMaker(object):
             self.drawRect(Tiles, 650, 350, 5, 5 )
             
             self.addBeasties(Beasties, 5)
+            self.addOrbs(Beasties, 1)
             
         elif level == 4:
             
             self.drawRect(Tiles, 200, 300, 25, 4 )
             self.addLasers(Lasers, 1)
             self.addBeasties(Beasties, 2)
+            self.addOrbs(Beasties, 1)
             
         elif level == 5:
             
@@ -71,20 +75,23 @@ class LevelMaker(object):
                     Tiles.append(t)
                 r+=1
             self.addBeasties(Beasties, 7)
-        
+            self.addOrbs(Beasties, 2)
+            
         elif level == 7:
             
             t = Tile( 750, 380, (55,0,0), (30,144,255))
             Tiles.append(t)
             self.addBeasties(Beasties, 16)
-
+            self.addOrbs(Beasties, 2)
+            
         elif level == 8:
             
             t = Tile( 750, 380, (55,0,0), (30,144,255))
             Tiles.append(t)
             self.addBeasties(Beasties, 16)
             self.addLasers(Lasers, 1)
-
+            self.addOrbs(Beasties, 2)
+            
         elif level == 9:
             
             self.drawRect(Tiles, 200, 300, 5, 5 )
@@ -95,7 +102,7 @@ class LevelMaker(object):
             
             self.addBeasties(Beasties, 4)
             self.addLasers(Lasers, 2)
-        
+            
         elif level == 10:
             
             while (len(Tiles)<20):
@@ -103,6 +110,8 @@ class LevelMaker(object):
                 Tiles.append(t)
             self.addBeasties(Beasties, 8)
             self.addLasers(Lasers, 1)
+            self.addOrbs(Beasties, 2)
+            
         elif level == 11:
             r=1
             for j in range(10):
@@ -113,8 +122,12 @@ class LevelMaker(object):
                     Tiles.append(t)
                 r+=1
             self.addBeasties(Beasties, 7)
+            self.addOrbs(Beasties, 3)
+            
         else:
             self.drawRect(Tiles, 200, 200, min(level + RND(level), 30), min(5 + RND(level), 10) )
+            if RND(3)==1:
+                self.addOrbs(Beasties, 2)
             if RND(3)==1:
                 self.addLasers(Lasers, RND(3))
             self.addBeasties(Beasties, 4 + RND(level))
@@ -126,6 +139,10 @@ class LevelMaker(object):
     def addBeasties(self, Beasties, count):
         for b in range(count):
             Beasties.append(Beastie(300 + RND(100), 250 + RND(100)))
+
+    def addOrbs(self, Beasties, count):
+        for b in range(count):
+            Beasties.append(Orb(700 + RND(99), 120 + RND(200)))
     
     def drawRect(self, Tiles, x , y, w, h):
         for j in range(h):

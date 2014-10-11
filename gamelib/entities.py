@@ -176,3 +176,28 @@ class Laser(object):
             lr = Rect(self.Hotspot.left, HORIZON-30, self.width, (self.width + self.Hotspot.top)-HORIZON)
             pygame.draw.rect(srf, self.c_laser , lr )
             self.LaserRect = lr
+
+class Orb(object):
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.xdir = -1
+        self.ydir = -1
+        self.Hotspot = Rect(x, y, 20, 20 )
+        self.Damage = 2
+        self.c2 = 0
+        
+    def Draw(self, srf):
+        self.c_body = (255,255,255) 
+        pygame.draw.rect(srf, self.c_body , self.Hotspot)
+        pygame.draw.circle(srf, (self.c2 , int(self.c2/2) , 0 ), (self.x+ 10, self.y+ 10), 1 + (self.c2 % 9) )
+        
+    def Move(self):
+        self.c2 += 1
+        if self.c2>255: self.c2 = 0
+        
+        if self.x<66 or self.x>810: self.xdir*=-1
+        if self.y<100 or self.y>510: self.ydir*=-1
+        self.x += -3 * self.xdir
+        self.y += -3 * self.ydir
+        self.Hotspot = Rect(self.x, self.y, 20, 20 )

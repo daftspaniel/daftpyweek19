@@ -43,8 +43,8 @@ Game = None
 # MAIN
 #------
 def main():
-    #pygame.mixer.music.load("snd/menu.mp3")
-    #pygame.mixer.music.play(-1)
+    pygame.mixer.music.load("snd/menu.mp3")
+    pygame.mixer.music.play(-1)
     
     GameState = 1
     DrawText(surface, 10, 50, "Daftspaniel Presents...", 48, (255,255,255) )

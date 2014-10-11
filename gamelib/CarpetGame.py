@@ -25,7 +25,7 @@ class CarpetGame(object):
     def MainLoop(self):
         
         self.p1 = Player( self.StartPos )
-        self.p1.Level = 11
+        self.p1.Level = 9
         self.CreateRoom(self.p1.Level)
         self.DrawRoom()
         pygame.key.set_repeat(1, 10)
@@ -54,6 +54,9 @@ class CarpetGame(object):
                         elif keystate[K_p]==1:
                             self.Pause = True
                             print("Pause")
+                        elif keystate[K_i]==1:
+                            self.p1.Health = 999
+                            print("CHEAT!")
 
                 elif event.type == ANIMEVENT:
                     
@@ -143,6 +146,7 @@ class CarpetGame(object):
                 self.SND.Play("LayTile")
                 self.TilesDone+=1
                 self.p1.Tiles -= 1
+                self.p1.Score += 10
                 if self.p1.Tiles==0:
                     self.SND.Play("TilesOut")
 
@@ -172,7 +176,7 @@ class CarpetGame(object):
             pygame.draw.rect(self.Surface, (255,255,255), (395,567,75,20))
             DrawText(self.Surface, 399, 570, "RELOAD", 24, (240,0,0) )
         DrawText(self.Surface, 520, 570, "Score : " + str(self.p1.Score), 24, (240,240,240) )
-        if self.p1.Hurting:
+        if self.p1.Hurting or self.p1.Health<10:
             pygame.draw.rect(self.Surface, (255,0,0), (610,560,125,40))
         DrawText(self.Surface, 620, 570, "Health : " + str(self.p1.Health), 24, (240,240,240) )
         
