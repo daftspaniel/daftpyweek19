@@ -56,8 +56,9 @@ def main():
         DrawText(surface, 210, 250, GameName[:k], 78, (255,0,0) )
         DrawText(surface, 211, 251, GameName[:k], 78, (255,156,0) )
         DrawText(surface, 212, 252, GameName[:k], 78, (245,245,245) )
-        if k!=4:soundman.Play("LayTile")
-        pygame.time.wait(300)
+        if k!=4:
+            soundman.Play("LayTile")
+            pygame.time.wait(300)
         screen.blit(surface, (0, 0))
         pygame.display.flip()
     
@@ -128,8 +129,8 @@ def main():
             
             print("Game over")
             surface.fill(pygame.Color("black"))
-            DrawText(surface, 10, 50, "Game Over", 48, (255,0,0) )
-            
+            #DrawText(surface, 10, 50, "Game Over", 48, (255,0,0) )
+
             while GameState == 4:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -139,6 +140,16 @@ def main():
                         if keystate[K_SPACE]:
                             GameState = 1
                     elif event.type == ANIMEVENT:
+                        surface.lock()
+                        DrawGradient(surface, Color(125, 0, backcol), Rect(0,0,800,600))
+                        surface.unlock()
+                        backcol += 1
+                        dudex += 1
+                        dudey = int(math.sin(dudex/20) * 120)
+                        if backcol>255:backcol=0
+                        DrawText(surface, 210, 250, "Game Over", 78, (255,0,0) )
+                        DrawText(surface, 211, 251, "Game Over", 78, (255,156,0) )
+                        DrawText(surface, 212, 252, "Game Over", 78, (255,255,255) )
                         screen.blit(surface, (0, 0))
                         pygame.display.flip()
 

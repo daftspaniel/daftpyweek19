@@ -35,7 +35,7 @@ class LevelMaker(object):
             Beasties.append(Beastie(300 + RND(100), 310))
             Beasties.append(Beastie(300 + RND(100), 210))
         
-        elif level == 2:
+        elif level == 2 or level == 6:
             
             for j in range(10):
                 for i in range(10):
@@ -44,7 +44,9 @@ class LevelMaker(object):
                         Tiles.append(t)
             
             self.addBeasties(Beasties, 3)
-            
+            if level == 6:
+                self.addLasers(Lasers, 1)
+                
         elif level == 3:
             self.drawRect(Tiles, 200, 300, 5, 5 )
             self.drawRect(Tiles, 350, 350, 5, 5 )
@@ -58,11 +60,54 @@ class LevelMaker(object):
             
             self.drawRect(Tiles, 200, 300, 25, 4 )
             self.addLasers(Lasers, 1)
+            self.addBeasties(Beasties, 2)
+            
+        elif level == 5:
+            
+            r=1
+            for j in range(10):
+                for i in range(r):
+                    t = Tile( 320 + TILE_WIDTH*i, 240 + TILE_WIDTH*j, (55,0,0), (170+(i*3 + j*4),20+(i*8+j*8),0))
+                    Tiles.append(t)
+                r+=1
+            self.addBeasties(Beasties, 7)
         
+        elif level == 7:
+            
+            t = Tile( 750, 380, (55,0,0), (30,144,255))
+            Tiles.append(t)
+            self.addBeasties(Beasties, 24)
+
+        elif level == 8:
+            
+            t = Tile( 750, 380, (55,0,0), (30,144,255))
+            Tiles.append(t)
+            self.addBeasties(Beasties, 24)
+            self.addLasers(Lasers, 1)
+
+        elif level == 9:
+            
+            self.drawRect(Tiles, 200, 300, 5, 5 )
+            
+            self.drawRect(Tiles, 320, 340, 16, 1 )
+            
+            self.drawRect(Tiles, 650, 300, 5, 5 )
+            
+            self.addBeasties(Beasties, 4)
+            self.addLasers(Lasers, 2)
+        
+        elif level == 10:
+            
+            while (len(Tiles)<20):
+                t = Tile( 80 + RND(28) * TILE_WIDTH, 200 + TILE_WIDTH * RND(10), (55,0,0), (RND(255),144,155))
+                Tiles.append(t)
+            self.addBeasties(Beasties, 8)
+            self.addLasers(Lasers, 1)
+            
         else:
             self.drawRect(Tiles, 200, 200, min(level*2 + RND(level), 30), min(15 + RND(level), 10) )
             if RND(3)==1:
-                self.addLasers(Lasers, RND(5))
+                self.addLasers(Lasers, RND(3))
             self.addBeasties(Beasties, 4 + RND(level))
             
     def addLasers(self, Lasers, count):

@@ -25,7 +25,7 @@ class CarpetGame(object):
     def MainLoop(self):
         
         self.p1 = Player( self.StartPos )
-        self.p1.Level = 55
+        self.p1.Level = 10
         self.CreateRoom(self.p1.Level)
         self.DrawRoom()
         pygame.key.set_repeat(1, 10)
@@ -79,7 +79,8 @@ class CarpetGame(object):
                             self.p1.Move(-2,0)
                         elif v_axis>0:
                             self.p1.Move(2,0)
-            
+        pygame.time.wait(1500)
+        
     def CreateRoom(self, level):
         self.TheRoom = Room( (0,255,0) )
         
@@ -96,6 +97,7 @@ class CarpetGame(object):
         
         if self.TilesDone == len(self.TheTiles) and len(self.TheTiles)>0:
             self.SND.Play("Done")
+            pygame.time.wait(1500)
             self.p1.Level += 1
             self.CreateRoom(self.p1.Level)
         
@@ -116,9 +118,9 @@ class CarpetGame(object):
                 self.SND.Play("Hurt")
                 self.p1.Hurting = True
         
-        for l in self.Lasers:
-            if l.Firing:
-                self.SND.Play("Laser")
+        #for l in self.Lasers:
+            #if l.Firing:
+                #self.SND.Play("Laser")
         
         # Tiles
         if self.p1.Tiles==0: return

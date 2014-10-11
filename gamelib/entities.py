@@ -157,7 +157,7 @@ class Laser(object):
             pygame.draw.rect(srf, self.c_laser , (self.Hotspot.left, HORIZON-30, self.width, (self.width + self.Hotspot.top)-HORIZON) )
             self.Duration -= 1
             if self.Duration==0:
-                self.Duration = 255
+                self.Duration = RND(200) + 55
                 self.WarningDuration = 55
                 self.Firing = False
                 self.Inactive = True
