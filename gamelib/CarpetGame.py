@@ -25,7 +25,7 @@ class CarpetGame(object):
     def MainLoop(self):
         
         self.p1 = Player( self.StartPos )
-        self.p1.Level = 1
+        self.p1.Level = 11
         self.CreateRoom(self.p1.Level)
         self.DrawRoom()
         pygame.key.set_repeat(1, 10)
@@ -117,11 +117,19 @@ class CarpetGame(object):
         # Beasties
         self.p1.Hurting = False
         for b in self.Beasties:
-            if b.Hotspot.colliderect(self.p1.Hotspot):
+            if b.Hotspot.colliderect(self.p1.rect):
                 self.p1.Health -= b.Damage
                 self.SND.Play("Hurt")
                 self.p1.Hurting = True
         
+        for l in self.Lasers:
+            if l.Hotspot.colliderect(self.p1.rect):
+                self.p1.Health -= l.Damage
+                self.SND.Play("Hurt")
+            if l.Firing:
+                if l.LaserRect.colliderect(self.p1.rect) :
+                    self.p1.Health -= l.Damage
+                    self.SND.Play("Hurt")
         #for l in self.Lasers:
             #if l.Firing:
                 #self.SND.Play("Laser")

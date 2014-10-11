@@ -76,13 +76,13 @@ class LevelMaker(object):
             
             t = Tile( 750, 380, (55,0,0), (30,144,255))
             Tiles.append(t)
-            self.addBeasties(Beasties, 24)
+            self.addBeasties(Beasties, 16)
 
         elif level == 8:
             
             t = Tile( 750, 380, (55,0,0), (30,144,255))
             Tiles.append(t)
-            self.addBeasties(Beasties, 24)
+            self.addBeasties(Beasties, 16)
             self.addLasers(Lasers, 1)
 
         elif level == 9:
@@ -103,9 +103,18 @@ class LevelMaker(object):
                 Tiles.append(t)
             self.addBeasties(Beasties, 8)
             self.addLasers(Lasers, 1)
-            
+        elif level == 11:
+            r=1
+            for j in range(10):
+                for i in range(r):
+                    t = Tile( 120 + TILE_WIDTH*i, 240 + TILE_WIDTH*j, (55,0,0), (170+(i*3 + j*4),20+(i*8+j*8),0))
+                    Tiles.append(t)
+                    t = Tile( 420 + TILE_WIDTH*i, 240 + TILE_WIDTH*j, (55,0,0), (170+(i*3 + j*4),20+(i*8+j*8),0))
+                    Tiles.append(t)
+                r+=1
+            self.addBeasties(Beasties, 7)
         else:
-            self.drawRect(Tiles, 200, 200, min(level*2 + RND(level), 30), min(15 + RND(level), 10) )
+            self.drawRect(Tiles, 200, 200, min(level + RND(level), 30), min(5 + RND(level), 10) )
             if RND(3)==1:
                 self.addLasers(Lasers, RND(3))
             self.addBeasties(Beasties, 4 + RND(level))

@@ -18,9 +18,11 @@ class Player(object):
         self.Hurting = False
         self.Moving = False
         self.Anim = 0
+        
     def Pos(self, apos):
         self.rect = Rect(apos[0], apos[1], 10, 25 )
         self.Hotspot = Rect(apos[0], apos[1] + 20, 10, 5 )
+        
     def Move(self, vert, hori):
         self.Moving = False
         if hori!=0:
@@ -32,7 +34,7 @@ class Player(object):
         if self.rect.x<0: self.rect.x = 0
         if self.rect.x>790: self.rect.x = 790
         if self.rect.y<HORIZON: self.rect.y = HORIZON
-        if self.rect.y>520: self.rect.y = 520
+        if self.rect.y>500: self.rect.y = 500
         
         self.Hotspot = Rect(self.rect.x, self.rect.y + 20, 10, 5 )
         self.Anim += 1
@@ -102,7 +104,7 @@ class Beastie(object):
         
     def Move(self):
         if self.x<166 or self.x>580 or RND(180)==100: self.xdir*=-1
-        if self.y<210 or self.y>500 or RND(180)==100: self.ydir*=-1
+        if self.y<180 or self.y>500 or RND(180)==100: self.ydir*=-1
         self.x += -1 * self.xdir
         self.y += -1 * self.ydir
         self.Hotspot = Rect(self.x, self.y, 30, 20 )
@@ -116,7 +118,7 @@ class Laser(object):
         
         self.width = 20
         self.Hotspot = Rect(x, y, self.width, self.width)
-        self.Damage = 8
+        self.Damage = 1
         
         self.Firing = False
         self.Activation = 2
@@ -125,10 +127,30 @@ class Laser(object):
         self.WarningDuration = 55
         
     def Move(self):
+        if self.WarningLight:
+            self.WarningDuration -= 1
+        if self.WarningDuration==0:
+                self.Firing = True
+                self.WarningLight = False
+                #self.Duration = 55
+        
+        if not self.WarningLight and not self.Firing and RND(100)<self.Activation: 
+            self.WarningLight = True
+        
         if self.WarningLight: return
         if self.x<166 or self.x>710: self.xdir*=-1
+        
         self.x += -1 * self.xdir
-        if RND(100)<self.Activation: self.WarningLight = True
+        
+        #print(self.Duration)
+        if self.Firing:
+            self.Duration -= 1
+            if self.Duration==0:
+                self.Duration = RND(200) + 55
+                self.WarningDuration = 55
+                self.Firing = False
+                self.Inactive = True
+                self.WarningLight = False
         
     def Draw(self, srf):
         
@@ -147,19 +169,10 @@ class Laser(object):
         #pygame.draw.rect(srf, (0,0,255) , self.Hotspot, 1)
         
         if self.WarningLight:
-            self.WarningDuration -= 1
-            if self.WarningDuration==0:
-                self.Firing = True
-                self.WarningLight = False
-            else:
+            if self.WarningDuration!=0:
                 pygame.draw.rect(srf,(255,0,0), (self.x, self.y+13, self.width, 4) )
         if self.Firing:
             self.c_laser = (RND(255),RND(255),RND(255))
-            pygame.draw.rect(srf, self.c_laser , (self.Hotspot.left, HORIZON-30, self.width, (self.width + self.Hotspot.top)-HORIZON) )
-            self.Duration -= 1
-            if self.Duration==0:
-                self.Duration = RND(200) + 55
-                self.WarningDuration = 55
-                self.Firing = False
-                self.Inactive = True
-                self.WarningLight = False
+            lr = Rect(self.Hotspot.left, HORIZON-30, self.width, (self.width + self.Hotspot.top)-HORIZON)
+            pygame.draw.rect(srf, self.c_laser , lr )
+            self.LaserRect = lr

@@ -152,6 +152,10 @@ def main():
                         DrawText(surface, 212, 252, "Game Over", 78, (255,255,255) )
                         screen.blit(surface, (0, 0))
                         pygame.display.flip()
+                
+                if ajoystick!=None and ajoystick.get_button(0)>0:
+                        GameState = 1
+                        pygame.time.wait(1000)
 
         elif GameState == 5: # Game Win
 
