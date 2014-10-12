@@ -10,9 +10,9 @@ To run : python3 run_game.py
 
 You are an intergalactic carpet fitter on a mission to fit out the 
 Universe 'one room' and one carpet tile at a time! Of course,
-complications such as monsters arise :-) As you are in interior design
-and not the marines, your only option is to avoid them.
+complications such as monsters arise :-) As you are in the interior
+design division and not the marines, your only option is to avoid them.
 
-Use WASD to move around or D-pad on a gamepad.
-
+Use WASD to move around or D-pad on a gamepad. You carry 30 tiles at a
+time, if you run out then return to your ship to get more.
 
