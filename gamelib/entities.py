@@ -98,6 +98,16 @@ class Tile(object):
         pygame.draw.rect(srf, self.outcol, Rect(
             self.x, self.y, TILE_WIDTH, TILE_WIDTH), 1)
 
+class HealthPack(object):
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.Hotspot = Rect(x + 5, y + 5, 10, 10)
+
+    def Draw(self, srf):
+        pygame.draw.rect(srf, (255, 255, 255), self.Hotspot)
+
 
 class Beastie(object):
     def __init__(self, x, y):

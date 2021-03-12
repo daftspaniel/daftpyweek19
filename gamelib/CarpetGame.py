@@ -95,11 +95,12 @@ class CarpetGame(object):
         self.TheTiles = []
         self.Beasties = []
         self.Lasers = []
+        self.Health = []
         self.TilesDone = 0
         self.p1.Pos(self.StartPos)
         self.p1.Tiles = 30
 
-        self.LM.CreateRoom(level, self.TheTiles, self.Beasties, self.Lasers)
+        self.LM.CreateRoom(level, self.TheTiles, self.Beasties, self.Lasers, self.Health)
 
     def CheckTiles(self):
 
@@ -165,6 +166,9 @@ class CarpetGame(object):
             b.Draw(self.Surface)
         for l in self.Lasers:
             l.Draw(self.Surface)
+        for h in self.Health:
+            h.Draw(self.Surface)
+
         self.StatusBar.Draw(self.Surface)
 
         self.p1.Draw(self.Surface)

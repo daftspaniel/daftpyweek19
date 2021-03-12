@@ -1,12 +1,12 @@
 
-from gamelib.entities import RND, Tile, Beastie, Laser, Orb, TILE_WIDTH
+from gamelib.entities import RND, Tile, Beastie, Laser, Orb, TILE_WIDTH, HealthPack
 
 class LevelMaker(object):
 
     def __init__(self):
         pass
 
-    def CreateRoom(self, level, Tiles, Beasties, Lasers, Txt=""):
+    def CreateRoom(self, level, Tiles, Beasties, Lasers, Health):
         print(level)
         # Test Level for Dev
         if level == 0:
@@ -34,6 +34,7 @@ class LevelMaker(object):
                     Tiles.append(t)
 
             self.addBeasties(Beasties, 3)
+            Health.append(HealthPack(50,300))
 
         elif level == 2 or level == 6:
 
